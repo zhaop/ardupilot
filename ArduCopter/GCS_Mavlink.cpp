@@ -161,17 +161,25 @@ void NOINLINE Copter::send_location(mavlink_channel_t chan)
 
 void NOINLINE Copter::send_nav_controller_output(mavlink_channel_t chan)
 {
+    float x_angle_rad;
+    float y_angle_rad;
+    precland.get_angle_to_target_rad(x_angle_rad, y_angle_rad);
+    
+    Vector3f target_vec_unit_body;
+    precland.get_los_body(target_vec_unit_body);
+    Vector3f target_vec_unit_ned = ahrs.get_rotation_body_to_ned() * target_vec_unit_body;
+    
     const Vector3f &targets = attitude_control.get_att_target_euler_cd();
     mavlink_msg_nav_controller_output_send(
         chan,
-        targets.x / 1.0e2f,
-        targets.y / 1.0e2f,
+        target_vec_unit_ned.y,
+        target_vec_unit_ned.x,
         targets.z / 1.0e2f,
         wp_bearing / 1.0e2f,
         wp_distance / 1.0e2f,
         pos_control.get_alt_error() / 1.0e2f,
-        0,
-        0);
+        x_angle_rad,
+        y_angle_rad);
 }
 
 // report simulator state

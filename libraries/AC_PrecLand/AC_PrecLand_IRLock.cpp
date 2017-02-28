@@ -58,4 +58,10 @@ bool AC_PrecLand_IRLock::have_los_meas() {
     return _have_los_meas;
 }
 
+// retrieve body frame x and y angles (in radians) to target
+// returns true if data is available
+bool AC_PrecLand_IRLock::get_angle_to_target_rad(float &x_angle_rad, float &y_angle_rad) const {
+    return irlock.get_angle_to_target_rad(x_angle_rad, y_angle_rad);
+}
+
 #endif // PX4

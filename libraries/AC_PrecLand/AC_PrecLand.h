@@ -60,8 +60,22 @@ public:
     // returns target velocity relative to vehicle
     bool get_target_velocity_relative_cms(Vector2f& ret) const;
 
+    // provides a unit vector towards the target in body frame
+    //  returns same as have_los_meas()
+    bool get_los_body(Vector3f& ret) const;
+
+    // retrieve body frame x and y angles (in radians) to target
+    // returns true if data is available
+    bool get_angle_to_target_rad(float &x_angle_rad, float &y_angle_rad) const;
+
     // returns true when the landing target has been detected
     bool target_acquired() const;
+
+    // returns how many times backend data was fused into EKF during this logging cycle
+    uint8_t fuse_count() const { return _fuse_count; }
+
+    // reset fuse count to 0
+    void reset_fuse_count() { _fuse_count = 0; }
 
     // process a LANDING_TARGET mavlink message
     void handle_msg(mavlink_message_t* msg);
@@ -89,6 +103,8 @@ private:
 
     uint32_t                    _last_update_ms;      // epoch time in millisecond when update is called
     uint32_t                    _last_backend_los_meas_ms;
+
+    uint8_t                     _fuse_count;             // how many times backend data was fused during this logging cycle (25Hz)
 
     PosVelEKF                   _ekf_x, _ekf_y;
     uint32_t                    _outlier_reject_count;

@@ -34,6 +34,9 @@ public:
     // parses a mavlink message from the companion computer
     void handle_msg(mavlink_message_t* msg);
 
+    // placeholder
+    bool get_angle_to_target_rad(float &x_angle_rad, float &y_angle_rad) const { return false; };
+
 private:
     uint64_t            _timestamp_us;          // timestamp from message
     float               _distance_to_target;    // distance from the camera to target in meters

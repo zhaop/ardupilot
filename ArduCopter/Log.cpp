@@ -673,7 +673,7 @@ void Copter::Log_Write_Precland()
     struct log_Precland pkt = {
         LOG_PACKET_HEADER_INIT(LOG_PRECLAND_MSG),
         time_us         : AP_HAL::micros64(),
-        healthy         : precland.healthy(),
+        healthy         : precland.fuse_count(),    // was precland.healthy()
         target_acquired : precland.target_acquired(),
         pos_x           : target_pos_rel.x,
         pos_y           : target_pos_rel.y,
@@ -681,6 +681,7 @@ void Copter::Log_Write_Precland()
         vel_y           : target_vel_rel.y
     };
     DataFlash.WriteBlock(&pkt, sizeof(pkt));
+    precland.reset_fuse_count();
  #endif     // PRECISION_LANDING == ENABLED
 }
 

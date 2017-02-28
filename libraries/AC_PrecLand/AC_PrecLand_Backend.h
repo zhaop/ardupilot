@@ -36,6 +36,10 @@ public:
     // parses a mavlink message from the companion computer
     virtual void handle_msg(mavlink_message_t* msg) = 0;
 
+    // retrieve body frame x and y angles (in radians) to target
+    // returns true if data is available
+    virtual bool get_angle_to_target_rad(float &x_angle_rad, float &y_angle_rad) const = 0;
+
 protected:
     const AC_PrecLand&  _frontend;          // reference to precision landing front end
     AC_PrecLand::precland_state &_state;    // reference to this instances state

@@ -60,6 +60,7 @@ AC_PrecLand::AC_PrecLand(const AP_AHRS& ahrs, const AP_InertialNav& inav) :
     _inav(inav),
     _last_update_ms(0),
     _last_backend_los_meas_ms(0),
+    _fuse_count(0),
     _backend(nullptr)
 {
     // set parameters to defaults
@@ -174,6 +175,7 @@ void AC_PrecLand::update(float rangefinder_alt_cm, bool rangefinder_alt_valid)
                         _ekf_x.fusePos(targetPosRelMeasNED.x, xy_pos_var);
                         _ekf_y.fusePos(targetPosRelMeasNED.y, xy_pos_var);
                         _last_update_ms = AP_HAL::millis();
+                        _fuse_count++;
                     } else {
                         _outlier_reject_count++;
                     }
@@ -222,6 +224,16 @@ bool AC_PrecLand::get_target_velocity_relative_cms(Vector2f& ret) const
     ret.x = _ekf_x.getVel()*100.0f;
     ret.y = _ekf_y.getVel()*100.0f;
     return true;
+}
+
+bool AC_PrecLand::get_los_body(Vector3f& ret) const
+{
+    return _backend->get_los_body(ret);
+}
+
+bool AC_PrecLand::get_angle_to_target_rad(float &x_angle_rad, float &y_angle_rad) const
+{
+    return _backend->get_angle_to_target_rad(x_angle_rad, y_angle_rad);
 }
 
 // handle_msg - Process a LANDING_TARGET mavlink message

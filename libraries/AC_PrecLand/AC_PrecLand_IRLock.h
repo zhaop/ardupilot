@@ -43,6 +43,10 @@ public:
     // parses a mavlink message from the companion computer
     void handle_msg(mavlink_message_t* msg) {};
 
+    // retrieve body frame x and y angles (in radians) to target
+    // returns true if data is available
+    bool get_angle_to_target_rad(float &x_angle_rad, float &y_angle_rad) const;
+
 private:
 #if CONFIG_HAL_BOARD == HAL_BOARD_SITL
     AP_IRLock_SITL irlock;
